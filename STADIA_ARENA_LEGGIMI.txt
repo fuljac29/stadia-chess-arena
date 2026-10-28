@@ -1,0 +1,21 @@
+STADIA CHESS ARENA V1 — FREE UNLIMITED
+Nuova repository: fuljac29/stadia-chess-arena
+File di avvio: streamlit_app.py
+
+Entrambe le scacchiere sono gratuite e illimitate.
+La vecchia repository e WordPress rimangono invariati.
+
+PER LA PROVA SU STREAMLIT:
+1. Caricare il contenuto della cartella nella NUOVA repository.
+2. Creare una nuova app Streamlit con streamlit_app.py.
+3. Configurare APP_SECRET e un DATABASE_URL SEPARATO nei Secrets della nuova app.
+4. Impostare STREAMLIT_PUBLIC_URL e STADIA_ARENA_URL sull'URL effettivo
+   della nuova app (l'URL predefinito è solo indicativo).
+5. Testare inviti, mosse, seconda partita e smartphone.
+
+Non mettere password o segreti nel repository.
+Il database condiviso è necessario per giocare tra dispositivi.
+Il checkout obbligatorio è rimosso dal flusso di gioco, ma restano
+funzioni commerciali inutilizzate nel sorgente.
+La cartella duplicata chess_board_frontend/chess_board_frontend è rimossa.
+Le dichiarazioni pubbliche Patent Pending sono state rimosse.

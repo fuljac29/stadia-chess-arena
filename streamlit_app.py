@@ -25,7 +25,7 @@ from i18n import LANGUAGES, tr
 
 
 st.set_page_config(
-    page_title="Stadia Private Chess",
+    page_title="Stadia Chess Arena — Free Unlimited",
     page_icon="♟",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -46,7 +46,9 @@ if configured_database_url:
 
 db.init_db()
 
-STADIA_PUBLIC_URL = "https://stadiaorg.com/stadia-premium-arena/".rstrip("/")
+STADIA_PUBLIC_URL = os.getenv(
+    "STADIA_ARENA_URL", "https://stadia-chess-arena.streamlit.app"
+).rstrip("/")
 SV_ACCESS_URL = "https://stadiaorg.com/wp-json/stadia-chess/v1/access"
 SV_FINISH_URL = "https://stadiaorg.com/wp-json/stadia-chess/v1/finish"
 
@@ -77,7 +79,7 @@ APP_SECRET = secret("APP_SECRET", "DEV-ONLY-CHANGE-ME")
 SV_CHESS_CHECKOUT_SECRET = secret("SV_CHESS_CHECKOUT_SECRET", "")
 STREAMLIT_PUBLIC_URL = secret(
     "STREAMLIT_PUBLIC_URL",
-    "https://stadia-chess-gui-3uaqqyaagnedaexn3vipja.streamlit.app",
+    "https://stadia-chess-arena.streamlit.app",
 ).rstrip("/")
 
 TIME_LABELS = {
@@ -101,11 +103,11 @@ def variant_label(lang: str, value: str) -> str:
 
 
 COUNTER_RULES = {
-    "EN": "T · Transparent Bishop: moves diagonally up to 3 squares and may pass over one piece, leaving it on the board. I · Interceptor: moves one square in any direction; when adjacent to an enemy T, it neutralizes its ability to pass over pieces. Patent protection: the official patent application has been filed and is pending (Patent Pending).",
-    "IT": "T · Alfiere Trasparente: si muove in diagonale fino a 3 caselle e può oltrepassare un solo pezzo, lasciandolo sulla scacchiera. I · Intercettore: si muove di una casella in ogni direzione; quando è adiacente a un T nemico ne neutralizza la capacità di attraversare i pezzi. Protezione brevettuale: la domanda ufficiale di brevetto è stata depositata ed è attualmente pendente (Patent Pending).",
-    "DE": "T · Transparenter Läufer: zieht diagonal bis zu 3 Felder und darf eine Figur überspringen, die auf dem Brett bleibt. I · Abfangfigur: zieht ein Feld in jede Richtung; steht sie neben einem gegnerischen T, neutralisiert sie dessen Fähigkeit, Figuren zu überspringen. Patentschutz: Die offizielle Patentanmeldung wurde eingereicht und ist anhängig (Patent Pending).",
-    "FR": "T · Fou transparent : se déplace en diagonale jusqu’à 3 cases et peut franchir une pièce, qui reste sur l’échiquier. I · Intercepteur : se déplace d’une case dans toutes les directions ; adjacent à un T adverse, il neutralise sa capacité à franchir les pièces. Protection par brevet : la demande officielle a été déposée et est en instance (Patent Pending).",
-    "ES": "T · Alfil transparente: se mueve en diagonal hasta 3 casillas y puede atravesar una pieza, que permanece en el tablero. I · Interceptor: se mueve una casilla en cualquier dirección; junto a una T enemiga neutraliza su capacidad de atravesar piezas. Protección de patente: la solicitud oficial ha sido presentada y está pendiente (Patent Pending).",
+    "EN": "T · Transparent Bishop: moves diagonally up to 3 squares and may pass over one piece, leaving it on the board. I · Interceptor: moves one square in any direction; when adjacent to an enemy T, it neutralizes its ability to pass over pieces.",
+    "IT": "T · Alfiere Trasparente: si muove in diagonale fino a 3 caselle e può oltrepassare un solo pezzo, lasciandolo sulla scacchiera. I · Intercettore: si muove di una casella in ogni direzione; quando è adiacente a un T nemico ne neutralizza la capacità di attraversare i pezzi.",
+    "DE": "T · Transparenter Läufer: zieht diagonal bis zu 3 Felder und darf eine Figur überspringen, die auf dem Brett bleibt. I · Abfangfigur: zieht ein Feld in jede Richtung; steht sie neben einem gegnerischen T, neutralisiert sie dessen Fähigkeit, Figuren zu überspringen.",
+    "FR": "T · Fou transparent : se déplace en diagonale jusqu’à 3 cases et peut franchir une pièce, qui reste sur l’échiquier. I · Intercepteur : se déplace d’une case dans toutes les directions ; adjacent à un T adverse, il neutralise sa capacité à franchir les pièces.",
+    "ES": "T · Alfil transparente: se mueve en diagonal hasta 3 casillas y puede atravesar una pieza, que permanece en el tablero. I · Interceptor: se mueve una casilla en cualquier dirección; junto a una T enemiga neutraliza su capacidad de atravesar piezas.",
 }
 
 DIRECT_INVITE_LABELS = {
@@ -168,7 +170,7 @@ UI = {
         "missing_names": "Enter both your name and your friend's name.", "code_not_found": "Invitation code not found.",
         "invited": "{white} invited {black} to a private chess game.", "accept_question": "Is this invitation for you?",
         "accept_button": "ACCEPT & PLAY", "open_button": "OPEN GAME", "cancel_button": "Not this invitation",
-        "your_code": "Invitation code", "tell_friend": "{friend} opens Stadia → Premium Arena and enters this code.",
+        "your_code": "Invitation code", "tell_friend": "{friend} opens Stadia → Stadia Chess Arena and enters this code.",
         "waiting_friend": "Waiting for {friend} to accept the invitation.", "send_invitation": "Send invitation",
         "send_whatsapp": "📱 WhatsApp", "send_email": "✉️ Email",
         "share_message": "{white} invites you to play private chess on Stadia.\n\nOpen:\n{url}\n\nInvitation code: {code}",
@@ -204,7 +206,7 @@ UI = {
         "missing_names": "Gib deinen Namen und den Namen deines Freundes ein.", "code_not_found": "Einladungscode nicht gefunden.",
         "invited": "{white} hat {black} zu einer privaten Schachpartie eingeladen.", "accept_question": "Ist diese Einladung für dich?",
         "accept_button": "ANNEHMEN & SPIELEN", "open_button": "PARTIE ÖFFNEN", "cancel_button": "Nicht diese Einladung",
-        "your_code": "Einladungscode", "tell_friend": "{friend} öffnet Stadia → Premium Arena und gibt diesen Code ein.",
+        "your_code": "Einladungscode", "tell_friend": "{friend} öffnet Stadia → Stadia Chess Arena und gibt diesen Code ein.",
         "waiting_friend": "Warte darauf, dass {friend} die Einladung annimmt.", "send_invitation": "Einladung senden",
         "send_whatsapp": "📱 WhatsApp", "send_email": "✉️ E-Mail",
         "share_message": "{white} lädt dich zu einer privaten Schachpartie auf Stadia ein.\n\nÖffne:\n{url}\n\nEinladungscode: {code}",
@@ -260,7 +262,7 @@ POLISH = {
         "create_hint": "Create a game and share the 6-character code with your friend.",
         "join_hint": "Already have a code? Enter it below and join the game.",
         "invitation_ready": "INVITATION READY",
-        "code_hint": "Send only this code. Your friend opens Premium Arena and enters it.",
+        "code_hint": "Send only this code. Your friend opens Stadia Chess Arena and enters it.",
         "save_game_link": "Save my game link",
         "save_game_help": "Keep this private link if you want to return to this exact game later.",
         "you_play": "YOU PLAY",
@@ -281,13 +283,13 @@ POLISH = {
         "copied": 'COPIED ✓',
         "send_to_friend": 'Send this code to {friend}',
         "guest_steps": 'What {friend} needs to do',
-        "guest_step_1": 'Open Stadia → Premium Arena',
+        "guest_step_1": 'Open Stadia → Stadia Chess Arena',
         "guest_step_2": 'Enter the 6-character invitation code',
         "guest_step_3": 'Accept the invitation and play',
         "you_will_play": 'YOU WILL PLAY',
         "invite_details": 'Private game invitation',
         "no_account": 'No account is required.',
-        "share_message_v089": '{white} invited you to a private chess game on Stadia.\n\nOpen Premium Arena:\n{url}\n\nInvitation code: {code}\n\nNo account is required.',
+        "share_message_v089": '{white} invited you to a private chess game on Stadia.\n\nOpen Stadia Chess Arena:\n{url}\n\nInvitation code: {code}\n\nNo account is required.',
         "clock": 'CHESS CLOCK',
         "white_clock": 'White',
         "black_clock": 'Black',
@@ -296,8 +298,8 @@ POLISH = {
         "premium_title": 'KEEP PLAYING',
         "winner_offer": "Winner's price",
         "standard_offer": 'Premium price',
-        "winner_note": 'You won your free game — your Premium Arena price is CHF 5.',
-        "standard_note": 'Your free game is complete. Continue in Premium Arena for CHF 9.',
+        "winner_note": 'You won your free game — your Stadia Chess Arena price is CHF 5.',
+        "standard_note": 'Your free game is complete. Continue in Stadia Chess Arena for CHF 9.',
         "premium_period": '30 days · unlimited private games · invited friends play free',
         "checkout_5": 'CONTINUE FOR CHF 5',
         "checkout_9": 'CONTINUE FOR CHF 9',
@@ -307,9 +309,9 @@ POLISH = {
         "premium_active_label": 'PREMIUM ACTIVE',
         "premium_active_text": 'Unlimited private games until {date}. Invited friends continue to play free.',
         "premium_locked": 'YOUR FREE GAME IS COMPLETE',
-        "premium_locked_text": 'To create another game, activate Premium Arena.',
+        "premium_locked_text": 'To create another game, activate Stadia Chess Arena.',
         "access_unavailable": 'Premium access service is temporarily unavailable. Invitations still work, but creating a new game is paused.',
-        "identity_missing": 'Player identity is missing. Open Premium Arena from stadiaorg.com.',
+        "identity_missing": 'Player identity is missing. Open Stadia Chess Arena from stadiaorg.com.',
         "same_player": 'This invitation is using the same browser identity as the creator. For a two-player test, open the invitation in another browser or a separate private/normal browser session.',
         "existing_free_game": 'You already have a free game in progress.',
         "open_existing": 'OPEN MY CURRENT GAME',
@@ -322,7 +324,7 @@ POLISH = {
         "create_hint": "Crea la partita e comunica al tuo amico il codice di 6 caratteri.",
         "join_hint": "Hai già un codice? Inseriscilo qui sotto ed entra nella partita.",
         "invitation_ready": "INVITO PRONTO",
-        "code_hint": "Invia solo questo codice. Il tuo amico apre Premium Arena e lo inserisce.",
+        "code_hint": "Invia solo questo codice. Il tuo amico apre Stadia Chess Arena e lo inserisce.",
         "save_game_link": "Salva il link della partita",
         "save_game_help": "Conserva questo link privato se vuoi tornare esattamente a questa partita.",
         "you_play": "TU GIOCHI",
@@ -343,13 +345,13 @@ POLISH = {
         "copied": 'COPIATO ✓',
         "send_to_friend": 'Invia questo codice a {friend}',
         "guest_steps": 'Cosa deve fare {friend}',
-        "guest_step_1": 'Aprire Stadia → Premium Arena',
+        "guest_step_1": 'Aprire Stadia → Stadia Chess Arena',
         "guest_step_2": 'Inserire il codice invito di 6 caratteri',
         "guest_step_3": "Accettare l'invito e giocare",
         "you_will_play": 'GIOCHERAI',
         "invite_details": 'Invito a partita privata',
         "no_account": 'Non è necessario creare un account.',
-        "share_message_v089": '{white} ti invita a una partita privata di scacchi su Stadia.\n\nApri Premium Arena:\n{url}\n\nCodice invito: {code}\n\nNon è necessario creare un account.',
+        "share_message_v089": '{white} ti invita a una partita privata di scacchi su Stadia.\n\nApri Stadia Chess Arena:\n{url}\n\nCodice invito: {code}\n\nNon è necessario creare un account.',
         "clock": 'CRONOMETRO',
         "white_clock": 'Bianco',
         "black_clock": 'Nero',
@@ -358,8 +360,8 @@ POLISH = {
         "premium_title": 'CONTINUA A GIOCARE',
         "winner_offer": 'Prezzo vincitore',
         "standard_offer": 'Prezzo Premium',
-        "winner_note": 'Hai vinto la partita gratuita — il tuo prezzo Premium Arena è CHF 5.',
-        "standard_note": 'La tua partita gratuita è terminata. Continua in Premium Arena per CHF 9.',
+        "winner_note": 'Hai vinto la partita gratuita — il tuo prezzo Stadia Chess Arena è CHF 5.',
+        "standard_note": 'La tua partita gratuita è terminata. Continua in Stadia Chess Arena per CHF 9.',
         "premium_period": '30 giorni · partite private illimitate · gli amici invitati giocano gratis',
         "checkout_5": 'CONTINUA PER CHF 5',
         "checkout_9": 'CONTINUA PER CHF 9',
@@ -369,9 +371,9 @@ POLISH = {
         "premium_active_label": 'PREMIUM ATTIVO',
         "premium_active_text": 'Partite private illimitate fino al {date}. Gli amici invitati continuano a giocare gratis.',
         "premium_locked": 'LA PARTITA GRATUITA È TERMINATA',
-        "premium_locked_text": "Per creare un'altra partita, attiva Premium Arena.",
+        "premium_locked_text": "Per creare un'altra partita, attiva Stadia Chess Arena.",
         "access_unavailable": 'Il servizio Premium è temporaneamente non disponibile. Gli inviti funzionano ancora, ma la creazione di nuove partite è sospesa.',
-        "identity_missing": 'Identità giocatore mancante. Apri Premium Arena da stadiaorg.com.',
+        "identity_missing": 'Identità giocatore mancante. Apri Stadia Chess Arena da stadiaorg.com.',
         "same_player": "Questo invito usa la stessa identità browser del creatore. Per il test a due giocatori, apri l'invito in un altro browser oppure in una sessione normale/privata separata.",
         "existing_free_game": 'Hai già una partita gratuita in corso.',
         "open_existing": 'APRI LA PARTITA IN CORSO',
@@ -384,7 +386,7 @@ POLISH = {
         "create_hint": "Erstelle eine Partie und sende deinem Freund den 6-stelligen Code.",
         "join_hint": "Du hast bereits einen Code? Gib ihn unten ein und tritt der Partie bei.",
         "invitation_ready": "EINLADUNG BEREIT",
-        "code_hint": "Sende nur diesen Code. Dein Freund öffnet die Premium Arena und gibt ihn ein.",
+        "code_hint": "Sende nur diesen Code. Dein Freund öffnet die Stadia Chess Arena und gibt ihn ein.",
         "save_game_link": "Meinen Partie-Link speichern",
         "save_game_help": "Bewahre diesen privaten Link auf, um später genau zu dieser Partie zurückzukehren.",
         "you_play": "DU SPIELST",
@@ -405,13 +407,13 @@ POLISH = {
         "copied": 'KOPIERT ✓',
         "send_to_friend": 'Sende diesen Code an {friend}',
         "guest_steps": 'Was {friend} tun muss',
-        "guest_step_1": 'Stadia → Premium Arena öffnen',
+        "guest_step_1": 'Stadia → Stadia Chess Arena öffnen',
         "guest_step_2": 'Den 6-stelligen Einladungscode eingeben',
         "guest_step_3": 'Einladung annehmen und spielen',
         "you_will_play": 'DU SPIELST',
         "invite_details": 'Private Partie-Einladung',
         "no_account": 'Es ist kein Konto erforderlich.',
-        "share_message_v089": '{white} lädt dich zu einer privaten Schachpartie auf Stadia ein.\n\nPremium Arena öffnen:\n{url}\n\nEinladungscode: {code}\n\nEs ist kein Konto erforderlich.',
+        "share_message_v089": '{white} lädt dich zu einer privaten Schachpartie auf Stadia ein.\n\nStadia Chess Arena öffnen:\n{url}\n\nEinladungscode: {code}\n\nEs ist kein Konto erforderlich.',
         "clock": 'SCHACHUHR',
         "white_clock": 'Weiß',
         "black_clock": 'Schwarz',
@@ -421,7 +423,7 @@ POLISH = {
         "winner_offer": 'Siegerpreis',
         "standard_offer": 'Premium-Preis',
         "winner_note": 'Du hast dein Gratis-Spiel gewonnen — dein Premium-Arena-Preis beträgt CHF 5.',
-        "standard_note": 'Dein Gratis-Spiel ist beendet. Spiele in der Premium Arena für CHF 9 weiter.',
+        "standard_note": 'Dein Gratis-Spiel ist beendet. Spiele in der Stadia Chess Arena für CHF 9 weiter.',
         "premium_period": '30 Tage · unbegrenzte private Partien · eingeladene Freunde spielen gratis',
         "checkout_5": 'WEITERSPIELEN FÜR CHF 5',
         "checkout_9": 'WEITERSPIELEN FÜR CHF 9',
@@ -431,9 +433,9 @@ POLISH = {
         "premium_active_label": 'PREMIUM AKTIV',
         "premium_active_text": 'Unbegrenzte private Partien bis {date}. Eingeladene Freunde spielen weiterhin kostenlos.',
         "premium_locked": 'DEINE KOSTENLOSE PARTIE IST BEENDET',
-        "premium_locked_text": 'Aktiviere Premium Arena, um eine weitere Partie zu erstellen.',
+        "premium_locked_text": 'Aktiviere Stadia Chess Arena, um eine weitere Partie zu erstellen.',
         "access_unavailable": 'Der Premium-Zugriff ist vorübergehend nicht verfügbar. Einladungen funktionieren weiter, neue Partien sind kurz pausiert.',
-        "identity_missing": 'Spieleridentität fehlt. Öffne Premium Arena über stadiaorg.com.',
+        "identity_missing": 'Spieleridentität fehlt. Öffne Stadia Chess Arena über stadiaorg.com.',
         "same_player": 'Diese Einladung verwendet dieselbe Browser-Identität wie der Ersteller. Öffne sie für einen Zwei-Spieler-Test in einem anderen Browser oder einer getrennten privaten/normalen Sitzung.',
         "existing_free_game": 'Du hast bereits eine kostenlose Partie laufen.',
         "open_existing": 'MEINE AKTUELLE PARTIE ÖFFNEN',
@@ -446,7 +448,7 @@ POLISH = {
         "create_hint": "Créez une partie et envoyez le code à 6 caractères à votre ami.",
         "join_hint": "Vous avez déjà un code ? Saisissez-le ci-dessous pour rejoindre la partie.",
         "invitation_ready": "INVITATION PRÊTE",
-        "code_hint": "Envoyez uniquement ce code. Votre ami ouvre Premium Arena et le saisit.",
+        "code_hint": "Envoyez uniquement ce code. Votre ami ouvre Stadia Chess Arena et le saisit.",
         "save_game_link": "Enregistrer mon lien de partie",
         "save_game_help": "Conservez ce lien privé pour revenir plus tard exactement à cette partie.",
         "you_play": "VOUS JOUEZ",
@@ -467,13 +469,13 @@ POLISH = {
         "copied": 'COPIÉ ✓',
         "send_to_friend": 'Envoyez ce code à {friend}',
         "guest_steps": 'Ce que {friend} doit faire',
-        "guest_step_1": 'Ouvrir Stadia → Premium Arena',
+        "guest_step_1": 'Ouvrir Stadia → Stadia Chess Arena',
         "guest_step_2": "Saisir le code d'invitation à 6 caractères",
         "guest_step_3": "Accepter l'invitation et jouer",
         "you_will_play": 'VOUS JOUEREZ',
         "invite_details": 'Invitation à une partie privée',
         "no_account": "Aucun compte n'est nécessaire.",
-        "share_message_v089": "{white} vous invite à une partie d'échecs privée sur Stadia.\n\nOuvrez Premium Arena :\n{url}\n\nCode d'invitation : {code}\n\nAucun compte n'est nécessaire.",
+        "share_message_v089": "{white} vous invite à une partie d'échecs privée sur Stadia.\n\nOuvrez Stadia Chess Arena :\n{url}\n\nCode d'invitation : {code}\n\nAucun compte n'est nécessaire.",
         "clock": 'PENDULE',
         "white_clock": 'Blancs',
         "black_clock": 'Noirs',
@@ -482,8 +484,8 @@ POLISH = {
         "premium_title": 'CONTINUER À JOUER',
         "winner_offer": 'Prix du gagnant',
         "standard_offer": 'Prix Premium',
-        "winner_note": 'Vous avez gagné votre partie gratuite — votre prix Premium Arena est de CHF 5.',
-        "standard_note": 'Votre partie gratuite est terminée. Continuez dans Premium Arena pour CHF 9.',
+        "winner_note": 'Vous avez gagné votre partie gratuite — votre prix Stadia Chess Arena est de CHF 5.',
+        "standard_note": 'Votre partie gratuite est terminée. Continuez dans Stadia Chess Arena pour CHF 9.',
         "premium_period": '30 jours · parties privées illimitées · les amis invités jouent gratuitement',
         "checkout_5": 'CONTINUER POUR CHF 5',
         "checkout_9": 'CONTINUER POUR CHF 9',
@@ -493,9 +495,9 @@ POLISH = {
         "premium_active_label": 'PREMIUM ACTIF',
         "premium_active_text": "Parties privées illimitées jusqu'au {date}. Les amis invités continuent à jouer gratuitement.",
         "premium_locked": 'VOTRE PARTIE GRATUITE EST TERMINÉE',
-        "premium_locked_text": 'Activez Premium Arena pour créer une autre partie.',
+        "premium_locked_text": 'Activez Stadia Chess Arena pour créer une autre partie.',
         "access_unavailable": 'Le service Premium est temporairement indisponible. Les invitations fonctionnent encore, mais la création de nouvelles parties est suspendue.',
-        "identity_missing": 'Identité du joueur manquante. Ouvrez Premium Arena depuis stadiaorg.com.',
+        "identity_missing": 'Identité du joueur manquante. Ouvrez Stadia Chess Arena depuis stadiaorg.com.',
         "same_player": 'Cette invitation utilise la même identité de navigateur que le créateur. Pour un test à deux joueurs, ouvrez-la dans un autre navigateur ou une session privée/normale séparée.',
         "existing_free_game": 'Vous avez déjà une partie gratuite en cours.',
         "open_existing": 'OUVRIR MA PARTIE EN COURS',
@@ -508,7 +510,7 @@ POLISH = {
         "create_hint": "Crea una partida y envía a tu amigo el código de 6 caracteres.",
         "join_hint": "¿Ya tienes un código? Introdúcelo abajo para entrar en la partida.",
         "invitation_ready": "INVITACIÓN LISTA",
-        "code_hint": "Envía solo este código. Tu amigo abre Premium Arena y lo introduce.",
+        "code_hint": "Envía solo este código. Tu amigo abre Stadia Chess Arena y lo introduce.",
         "save_game_link": "Guardar el enlace de mi partida",
         "save_game_help": "Guarda este enlace privado para volver más tarde exactamente a esta partida.",
         "you_play": "TÚ JUEGAS",
@@ -529,13 +531,13 @@ POLISH = {
         "copied": 'COPIADO ✓',
         "send_to_friend": 'Envía este código a {friend}',
         "guest_steps": 'Lo que debe hacer {friend}',
-        "guest_step_1": 'Abrir Stadia → Premium Arena',
+        "guest_step_1": 'Abrir Stadia → Stadia Chess Arena',
         "guest_step_2": 'Introducir el código de invitación de 6 caracteres',
         "guest_step_3": 'Aceptar la invitación y jugar',
         "you_will_play": 'JUGARÁS',
         "invite_details": 'Invitación a partida privada',
         "no_account": 'No es necesario crear una cuenta.',
-        "share_message_v089": '{white} te invita a una partida privada de ajedrez en Stadia.\n\nAbre Premium Arena:\n{url}\n\nCódigo de invitación: {code}\n\nNo es necesario crear una cuenta.',
+        "share_message_v089": '{white} te invita a una partida privada de ajedrez en Stadia.\n\nAbre Stadia Chess Arena:\n{url}\n\nCódigo de invitación: {code}\n\nNo es necesario crear una cuenta.',
         "clock": 'RELOJ',
         "white_clock": 'Blancas',
         "black_clock": 'Negras',
@@ -544,8 +546,8 @@ POLISH = {
         "premium_title": 'SEGUIR JUGANDO',
         "winner_offer": 'Precio del ganador',
         "standard_offer": 'Precio Premium',
-        "winner_note": 'Ganaste tu partida gratuita — tu precio Premium Arena es CHF 5.',
-        "standard_note": 'Tu partida gratuita ha terminado. Continúa en Premium Arena por CHF 9.',
+        "winner_note": 'Ganaste tu partida gratuita — tu precio Stadia Chess Arena es CHF 5.',
+        "standard_note": 'Tu partida gratuita ha terminado. Continúa en Stadia Chess Arena por CHF 9.',
         "premium_period": '30 días · partidas privadas ilimitadas · los amigos invitados juegan gratis',
         "checkout_5": 'CONTINUAR POR CHF 5',
         "checkout_9": 'CONTINUAR POR CHF 9',
@@ -555,9 +557,9 @@ POLISH = {
         "premium_active_label": 'PREMIUM ACTIVO',
         "premium_active_text": 'Partidas privadas ilimitadas hasta {date}. Los amigos invitados siguen jugando gratis.',
         "premium_locked": 'TU PARTIDA GRATUITA HA TERMINADO',
-        "premium_locked_text": 'Activa Premium Arena para crear otra partida.',
+        "premium_locked_text": 'Activa Stadia Chess Arena para crear otra partida.',
         "access_unavailable": 'El servicio Premium no está disponible temporalmente. Las invitaciones siguen funcionando, pero crear nuevas partidas está pausado.',
-        "identity_missing": 'Falta la identidad del jugador. Abre Premium Arena desde stadiaorg.com.',
+        "identity_missing": 'Falta la identidad del jugador. Abre Stadia Chess Arena desde stadiaorg.com.',
         "same_player": 'Esta invitación usa la misma identidad de navegador que el creador. Para una prueba con dos jugadores, ábrela en otro navegador o en una sesión privada/normal separada.',
         "existing_free_game": 'Ya tienes una partida gratuita en curso.',
         "open_existing": 'ABRIR MI PARTIDA ACTUAL',
@@ -1254,7 +1256,9 @@ if seat_token and not seat:
 
 player_id = str(st.query_params.get("player", "")).strip()
 if not valid_player_id(player_id):
-    player_id = ""
+    if "arena_guest_player_id" not in st.session_state:
+        st.session_state["arena_guest_player_id"] = "arena_" + secrets.token_hex(16)
+    player_id = st.session_state["arena_guest_player_id"]
 
 if seat:
     render_html(f"""
@@ -1488,55 +1492,16 @@ if not seat:
         key="new_game_variant",
     )
 
-    access_state = get_access_state(player_id) if player_id else None
-
-    # If the player closed the page immediately after a finished game,
-    # recover that result here and register the free-game usage before
-    # deciding whether a new game may be created.
-    if (
-        player_id
-        and access_state
-        and access_state.get("free_available")
-    ):
-        finished_game = db.get_latest_finished_game_by_player_id(
-            player_id
-        )
-        if finished_game and sync_finished_game(finished_game):
-            access_state = get_access_state(player_id)
-
-    can_create = False
-
-    if not player_id:
-        st.error(polish(lang, "identity_missing"))
-    elif access_state is None:
-        st.warning(polish(lang, "access_unavailable"))
-    elif access_state.get("premium_active"):
-        premium_date = access_date_text(access_state)
-        render_html(f"""<div class="sv-access-card premium"><div class="sv-access-label">{escape(polish(lang, 'premium_active_label'))}</div><div class="sv-access-text">{escape(polish(lang, 'premium_active_text').format(date=premium_date))}</div></div>""")
-        can_create = True
-    elif access_state.get("free_available"):
-        render_html(f"""<div class="sv-access-card"><div class="sv-access-label">{escape(polish(lang, 'free_status'))}</div><div class="sv-access-text">{escape(polish(lang, 'free_status_text'))}</div></div>""")
-        open_game = db.get_open_game_by_white_player_id(player_id)
-        if open_game:
-            st.info(polish(lang, "existing_free_game"))
-            if st.button(polish(lang, "open_existing"), type="primary", use_container_width=True):
-                st.query_params["seat"] = make_seat_token(open_game["id"], "white", APP_SECRET)
-                st.query_params["lang"] = lang
-                st.query_params["player"] = player_id
-                st.rerun()
-        else:
-            can_create = True
-    else:
-        render_html(f"""<div class="sv-access-card locked"><div class="sv-access-label">{escape(polish(lang, 'premium_locked'))}</div><div class="sv-access-text">{escape(polish(lang, 'premium_locked_text'))}</div></div>""")
-        offer = "winner" if (not access_state.get("paid_once") and access_state.get("first_offer") == "winner") else "standard"
-        is_winner_offer = offer == "winner"
-        offer_price = "CHF 5" if is_winner_offer else "CHF 9"
-        render_html(f"""<div class="sv-premium-offer"><div class="sv-premium-kicker">{escape(polish(lang, 'premium_title'))}</div><div class="sv-premium-price">{escape(polish(lang, 'winner_offer') if is_winner_offer else polish(lang, 'standard_offer'))} · {escape(offer_price)}</div><div class="sv-premium-note">{escape(polish(lang, 'winner_note') if is_winner_offer else polish(lang, 'standard_note'))}</div><div class="sv-premium-period">{escape(polish(lang, 'premium_period'))}</div></div>""")
-        checkout_url = signed_checkout_url(str(access_state.get("free_game_id") or ""), str(access_state.get("first_role") or "white"), offer, player_id)
-        if checkout_url:
-            st.link_button(polish(lang, "checkout_5") if is_winner_offer else polish(lang, "checkout_9"), checkout_url, type="primary", use_container_width=True)
-        else:
-            st.error(polish(lang, "checkout_unavailable"))
+    # Both variants are free, without a WordPress payment/access check.
+    can_create = True
+    free_label = {
+        "EN": "FREE UNLIMITED CHESS — 8×8 AND 10×8",
+        "IT": "SCACCHI GRATIS ILLIMITATI — 8×8 E 10×8",
+        "DE": "UNBEGRENZT KOSTENLOSES SCHACH — 8×8 UND 10×8",
+        "FR": "ÉCHECS GRATUITS ILLIMITÉS — 8×8 ET 10×8",
+        "ES": "AJEDREZ GRATIS ILIMITADO — 8×8 Y 10×8",
+    }
+    st.success(free_label.get(lang, free_label["EN"]))
 
     if can_create:
         render_html(f'<p class="sv-section-intro">{escape(polish(lang, "create_hint"))}</p>')
@@ -1811,7 +1776,7 @@ def player_offer(
 
 def start_fresh_game() -> None:
     """
-    Leave the current signed seat and return to a clean Premium Arena lobby.
+    Leave the current signed seat and return to a clean Stadia Chess Arena lobby.
 
     This changes only Streamlit navigation/session state. It does not modify
     the finished game, chess engine, database moves, or board component.
@@ -2417,86 +2382,20 @@ def live_board_fragment() -> None:
             </div>
             """)
 
-            sync_finished_game(current)
-            access_state = get_access_state(player_id) if player_id else None
-
-            if access_state and access_state.get("free_available"):
-                st.warning(polish(lang, "access_unavailable"))
-                return
-
-            if access_state and access_state.get("premium_active"):
-                premium_date = access_date_text(access_state)
-                render_html(f"""<div class="sv-access-card premium"><div class="sv-access-label">{escape(polish(lang, 'premium_active_label'))}</div><div class="sv-access-text">{escape(polish(lang, 'premium_active_text').format(date=premium_date))}</div></div>""")
-                if st.button(polish(lang, "premium_play_again"), type="primary", use_container_width=True, key=f"premium_new_game_{seat.game_id}_{seat.role}"):
-                    start_fresh_game()
-                st.link_button(polish(lang, "back_stadia"), "https://stadiaorg.com/", use_container_width=True)
-                return
-
-            if access_state is None:
-                st.warning(polish(lang, "access_unavailable"))
-                return
-
-            offer = "winner" if (not access_state.get("paid_once") and access_state.get("first_offer") == "winner") else "standard"
-
-            is_winner_offer = (
-                offer == "winner"
-            )
-
-            offer_title = (
-                polish(lang, "winner_offer")
-                if is_winner_offer
-                else polish(lang, "standard_offer")
-            )
-
-            offer_price = (
-                "CHF 5"
-                if is_winner_offer
-                else "CHF 9"
-            )
-
-            offer_note = (
-                polish(lang, "winner_note")
-                if is_winner_offer
-                else polish(lang, "standard_note")
-            )
-
-            render_html(
-                f"""
-                <div class="sv-premium-offer">
-                    <div class="sv-premium-kicker">{escape(polish(lang, 'premium_title'))}</div>
-                    <div class="sv-premium-price">{escape(offer_title)} · {escape(offer_price)}</div>
-                    <div class="sv-premium-note">{escape(offer_note)}</div>
-                    <div class="sv-premium-period">{escape(polish(lang, 'premium_period'))}</div>
-                </div>
-                """
-            )
-
-            checkout_url = signed_checkout_url(
-                str(access_state.get("free_game_id") or current["id"]),
-                str(access_state.get("first_role") or seat.role),
-                offer,
-                player_id,
-            )
-
-            if checkout_url:
-                st.link_button(
-                    (
-                        polish(lang, "checkout_5")
-                        if is_winner_offer
-                        else polish(lang, "checkout_9")
-                    ),
-                    checkout_url,
-                    type="primary",
-                    use_container_width=True,
-                )
-            else:
-                st.error(
-                    polish(
-                        lang,
-                        "checkout_unavailable",
-                    )
-                )
-
+            play_again_text = {
+                "EN": "PLAY AGAIN — FREE",
+                "IT": "GIOCA ANCORA — GRATIS",
+                "DE": "NOCH EINMAL SPIELEN — GRATIS",
+                "FR": "REJOUER — GRATUIT",
+                "ES": "VOLVER A JUGAR — GRATIS",
+            }
+            if st.button(
+                play_again_text.get(lang, play_again_text["EN"]),
+                type="primary",
+                use_container_width=True,
+                key=f"arena_play_again_{seat.game_id}_{seat.role}",
+            ):
+                start_fresh_game()
             st.link_button(
                 polish(lang, "back_stadia"),
                 "https://stadiaorg.com/",
