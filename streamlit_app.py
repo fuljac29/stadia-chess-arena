@@ -316,7 +316,7 @@ POLISH = {
         "existing_free_game": 'You already have a free game in progress.',
         "open_existing": 'OPEN MY CURRENT GAME',
         "premium_play_again": 'PLAY ANOTHER GAME',
-        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
+        "footer": 'Stadia Private Chess · v0.9.2.6 Final Result Sync',
     },
     "IT": {
         "arena_badge": "ARENA SCACCHI PRIVATA",
@@ -378,7 +378,7 @@ POLISH = {
         "existing_free_game": 'Hai già una partita gratuita in corso.',
         "open_existing": 'APRI LA PARTITA IN CORSO',
         "premium_play_again": "GIOCA UN'ALTRA PARTITA",
-        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
+        "footer": 'Stadia Private Chess · v0.9.2.6 Final Result Sync',
     },
     "DE": {
         "arena_badge": "PRIVATE SCHACH-ARENA",
@@ -440,7 +440,7 @@ POLISH = {
         "existing_free_game": 'Du hast bereits eine kostenlose Partie laufen.',
         "open_existing": 'MEINE AKTUELLE PARTIE ÖFFNEN',
         "premium_play_again": 'NOCH EINE PARTIE',
-        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
+        "footer": 'Stadia Private Chess · v0.9.2.6 Final Result Sync',
     },
     "FR": {
         "arena_badge": "ARÈNE D'ÉCHECS PRIVÉE",
@@ -502,7 +502,7 @@ POLISH = {
         "existing_free_game": 'Vous avez déjà une partie gratuite en cours.',
         "open_existing": 'OUVRIR MA PARTIE EN COURS',
         "premium_play_again": 'JOUER UNE AUTRE PARTIE',
-        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
+        "footer": 'Stadia Private Chess · v0.9.2.6 Final Result Sync',
     },
     "ES": {
         "arena_badge": "ARENA DE AJEDREZ PRIVADA",
@@ -564,7 +564,7 @@ POLISH = {
         "existing_free_game": 'Ya tienes una partida gratuita en curso.',
         "open_existing": 'ABRIR MI PARTIDA ACTUAL',
         "premium_play_again": 'JUGAR OTRA PARTIDA',
-        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
+        "footer": 'Stadia Private Chess · v0.9.2.6 Final Result Sync',
     },
 }
 
@@ -2324,6 +2324,24 @@ def live_board_fragment() -> None:
         st.error(tr(lang, "game_missing"))
         return
 
+    # Streamlit periodically refreshes this fragment, but browsers may
+    # throttle background/inactive tabs. This visible button lets either
+    # player fetch the final move and result immediately.
+    if current["status"] == "finished":
+        refresh_labels = {
+            "EN": "REFRESH FINAL RESULT",
+            "IT": "AGGIORNA IL RISULTATO",
+            "DE": "ENDERGEBNIS AKTUALISIEREN",
+            "FR": "ACTUALISER LE RÉSULTAT",
+            "ES": "ACTUALIZAR EL RESULTADO",
+        }
+        if st.button(
+            refresh_labels.get(lang, refresh_labels["EN"]),
+            key=f"arena_refresh_final_{seat.game_id}_{seat.role}",
+            use_container_width=True,
+        ):
+            st.rerun(scope="fragment")
+
     render_chess_clock(current)
 
     board = db.board_from_game(current)
@@ -2359,7 +2377,9 @@ def live_board_fragment() -> None:
         )
 
     if current["status"] == "finished":
-        turn_sub = polish(lang, "game_over")
+        # Present the same final result to both players, never "X to move".
+        turn_text = polish(lang, "game_over")
+        turn_sub = polished_result_text(current)
     elif can_move:
         turn_sub = polish(lang, "your_turn")
     else:
