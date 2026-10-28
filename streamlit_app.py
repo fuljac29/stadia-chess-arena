@@ -316,7 +316,7 @@ POLISH = {
         "existing_free_game": 'You already have a free game in progress.',
         "open_existing": 'OPEN MY CURRENT GAME',
         "premium_play_again": 'PLAY ANOTHER GAME',
-        "footer": 'Stadia Private Chess · v0.9.2.4 Instant Board Controls',
+        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
     },
     "IT": {
         "arena_badge": "ARENA SCACCHI PRIVATA",
@@ -378,7 +378,7 @@ POLISH = {
         "existing_free_game": 'Hai già una partita gratuita in corso.',
         "open_existing": 'APRI LA PARTITA IN CORSO',
         "premium_play_again": "GIOCA UN'ALTRA PARTITA",
-        "footer": 'Stadia Private Chess · v0.9.2.4 Instant Board Controls',
+        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
     },
     "DE": {
         "arena_badge": "PRIVATE SCHACH-ARENA",
@@ -440,7 +440,7 @@ POLISH = {
         "existing_free_game": 'Du hast bereits eine kostenlose Partie laufen.',
         "open_existing": 'MEINE AKTUELLE PARTIE ÖFFNEN',
         "premium_play_again": 'NOCH EINE PARTIE',
-        "footer": 'Stadia Private Chess · v0.9.2.4 Instant Board Controls',
+        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
     },
     "FR": {
         "arena_badge": "ARÈNE D'ÉCHECS PRIVÉE",
@@ -502,7 +502,7 @@ POLISH = {
         "existing_free_game": 'Vous avez déjà une partie gratuite en cours.',
         "open_existing": 'OUVRIR MA PARTIE EN COURS',
         "premium_play_again": 'JOUER UNE AUTRE PARTIE',
-        "footer": 'Stadia Private Chess · v0.9.2.4 Instant Board Controls',
+        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
     },
     "ES": {
         "arena_badge": "ARENA DE AJEDREZ PRIVADA",
@@ -564,7 +564,7 @@ POLISH = {
         "existing_free_game": 'Ya tienes una partida gratuita en curso.',
         "open_existing": 'ABRIR MI PARTIDA ACTUAL',
         "premium_play_again": 'JUGAR OTRA PARTIDA',
-        "footer": 'Stadia Private Chess · v0.9.2.4 Instant Board Controls',
+        "footer": 'Stadia Private Chess · v0.9.2.5 Clear Player Fields',
     },
 }
 
@@ -1112,6 +1112,55 @@ div[data-testid="stForm"] [data-testid="stMarkdownContainer"] p{
     .sv-match-card,.sv-turn-card{align-items:flex-start;flex-direction:column}
     .sv-side-wrap{text-align:left}
 }
+
+/* v0.9.2.5 — accessible pre-game fields in both Streamlit themes */
+[data-testid="stForm"] label,
+[data-testid="stForm"] label p,
+[data-testid="stForm"] [data-testid="stWidgetLabel"],
+[data-testid="stForm"] [data-testid="stWidgetLabel"] p,
+[data-testid="stRadio"] label,
+[data-testid="stRadio"] label p,
+[data-testid="stRadio"] [data-testid="stWidgetLabel"] p {
+    color:#182235!important;
+    opacity:1!important;
+    -webkit-text-fill-color:#182235!important;
+}
+[data-testid="stForm"] [data-testid="stTextInput"] input {
+    background-color:#ffffff!important;
+    color:#182235!important;
+    -webkit-text-fill-color:#182235!important;
+    border:2px solid #9e96c6!important;
+    border-radius:10px!important;
+    caret-color:#182235!important;
+}
+[data-testid="stForm"] [data-testid="stTextInput"] input::placeholder {
+    color:#5e6678!important;
+    -webkit-text-fill-color:#5e6678!important;
+    opacity:1!important;
+}
+[data-testid="stForm"] [data-testid="stTextInput"] input:focus {
+    border-color:#5b3ff0!important;
+    box-shadow:0 0 0 2px rgba(91,63,240,.18)!important;
+}
+[data-testid="stForm"] [data-testid="stSelectbox"] [data-baseweb="select"] > div {
+    background:#ffffff!important;
+    color:#182235!important;
+    border:2px solid #9e96c6!important;
+}
+[data-testid="stForm"] [data-testid="stSelectbox"] [data-baseweb="select"] span,
+[data-testid="stForm"] [data-testid="stSelectbox"] [data-baseweb="select"] input {
+    color:#182235!important;
+    -webkit-text-fill-color:#182235!important;
+}
+[data-testid="stRadio"] div[role="radiogroup"] label {
+    background:#ffffff!important;
+    border-color:#b6ade9!important;
+}
+[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {
+    background:#eeeaff!important;
+    border-color:#7657ff!important;
+}
+
 </style>
 """)
 
@@ -1310,6 +1359,7 @@ if not seat:
                 ui(lang, "invite_code"),
                 max_chars=8,
                 help=ui(lang, "code_help"),
+                placeholder="ABC123",
             )
 
             find_invite = st.form_submit_button(
@@ -1503,11 +1553,20 @@ if not seat:
     }
     st.success(free_label.get(lang, free_label["EN"]))
 
+    name_placeholders = {
+        "EN": ("Enter your name (White)", "Enter your friend's name (Black)"),
+        "IT": ("Scrivi il tuo nome (Bianco)", "Scrivi il nome dell'amico (Nero)"),
+        "DE": ("Deinen Namen eingeben (Weiß)", "Namen des Freundes eingeben (Schwarz)"),
+        "FR": ("Saisissez votre nom (Blancs)", "Saisissez le nom de votre ami (Noirs)"),
+        "ES": ("Escribe tu nombre (Blancas)", "Escribe el nombre de tu amigo (Negras)"),
+    }
+    name_hint = name_placeholders.get(lang, name_placeholders["EN"])
+
     if can_create:
         render_html(f'<p class="sv-section-intro">{escape(polish(lang, "create_hint"))}</p>')
         with st.form("create_game", border=True):
-            white_name = st.text_input(ui(lang, "your_name"))
-            friend_name = st.text_input(ui(lang, "friend_name"))
+            white_name = st.text_input(ui(lang, "your_name"), placeholder=name_hint[0])
+            friend_name = st.text_input(ui(lang, "friend_name"), placeholder=name_hint[1])
             time_control = st.selectbox(ui(lang, "time_control"), options=list(TIME_LABELS.keys()), format_func=lambda x: TIME_LABELS[x])
             submitted = st.form_submit_button(ui(lang, "create_button"), type="primary", use_container_width=True)
         if submitted:
